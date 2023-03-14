@@ -7,7 +7,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 CLIENT_SECRETS_FILE = 'client_secret.json'
 
 
-def create_youtube_playlist(secret_key):
+def create_youtube_playlist():
     creds = authenticate()
     youtube = build('youtube', 'v3', credentials=creds)
 
