@@ -1,4 +1,6 @@
 import os
+import time
+
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
@@ -8,12 +10,16 @@ CLIENT_SECRETS_FILE = 'client_secret.json'
 
 
 def create_youtube_playlist():
+    t0 = time.time()
+
     creds = authenticate()
     youtube = build('youtube', 'v3', credentials=creds)
 
-    playlist_titles = ['My Playlist 1', 'My Playlist 2', 'My Playlist 3']
+    prefix = 'Cartoon Playlist'
 
-    for title in playlist_titles:
+    for i in range(1, 1001):
+        title = f'{prefix} {i}'
+
         request = youtube.playlists().insert(
             part='snippet, status',
             body={
@@ -30,6 +36,8 @@ def create_youtube_playlist():
 
         print(f'Created playlist with title "{response["snippet"]["title"]}" and ID "{response["id"]}".')
 
+    t1 = time.time()
+    print('It took', int(t1 - t0), 'seconds to create 1000 playlists')
 
 def authenticate():
     creds = None
