@@ -39,6 +39,7 @@ def create_youtube_playlist():
     t1 = time.time()
     print('It took', int(t1 - t0), 'seconds to create 1000 playlists')
 
+
 def authenticate():
     creds = None
     if os.path.exists('token.json'):
