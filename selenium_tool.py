@@ -38,7 +38,7 @@ def create_youtube_playlist():
     new_tab = driver.window_handles[-1]
     driver.switch_to.window(new_tab)
 
-    title_prefix = 'Testing1 Playlist'
+    title_prefix = 'Testing2 Playlist'
 
     for i in range(1, 1001):
         create_path = r"create-icon"
@@ -53,8 +53,8 @@ def create_youtube_playlist():
         title_element = wait.until(EC.element_to_be_clickable((By.XPATH, title_x_path)))
         title_element.send_keys(f'{title_prefix} {i}')
 
-        save_button_path = "ytcp-button[id='create-button'] div[class='label style-scope ytcp-button']"
-        save_button_element = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, save_button_path)))
+        save_button_x_path = "ytcp-button[id='create-button'] div[class='label style-scope ytcp-button']"
+        save_button_element = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, save_button_x_path)))
         save_button_element.click()
 
         if i == 1:
@@ -66,3 +66,12 @@ def create_youtube_playlist():
 
     t1 = time.time()
     print('It took', round((t1 - t0), 1), 'Seconds TO create 1000 Playlist')
+
+
+
+playlist_tab_x_path = "//span[normalize-space()='Playlists']"
+playlist_x_path = "//ytcp-playlist-row[1]//div[1]//div[1]//div[1]//a[1]//ytcp-playlist-thumbnail[1]//ytcp-img-with-fallback[1]//div[1]//img[1]"
+# move to second page
+three_dots_button_x_path = "button[aria-label='Action menu'] div[class='yt-spec-touch-feedback-shape yt-spec-touch-feedback-shape--touch-response']"
+add_videos_x_path = "ytd-menu-service-item-renderer[class='style-scope ytd-menu-popup-renderer iron-selected'] tp-yt-paper-item[role='option']"
+search_button_selector = "body"
