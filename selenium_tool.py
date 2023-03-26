@@ -68,10 +68,46 @@ def create_youtube_playlist():
     print('It took', round((t1 - t0), 1), 'Seconds TO create 1000 Playlist')
 
 
+def add_video_to_playlist():
+    driver = get_chrome_driver()
+    driver.get(YOUTUBE_HOME_PAGE)
+    driver.maximize_window()
 
-playlist_tab_x_path = "//span[normalize-space()='Playlists']"
-playlist_x_path = "//ytcp-playlist-row[1]//div[1]//div[1]//div[1]//a[1]//ytcp-playlist-thumbnail[1]//ytcp-img-with-fallback[1]//div[1]//img[1]"
+    wait = WebDriverWait(driver, 10)
+
+    your_videos_css_selector = 'body > ytd-app:nth-child(4) > div:nth-child(7) > tp-yt-app-drawer:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > ytd-guide-renderer:nth-child(1) > div:nth-child(1) > ytd-guide-section-renderer:nth-child(1) > div:nth-child(2) > ytd-guide-collapsible-section-entry-renderer:nth-child(4) > div:nth-child(2) > ytd-guide-entry-renderer:nth-child(2) > a:nth-child(1) > tp-yt-paper-item:nth-child(1) > yt-formatted-string:nth-child(3)'
+    your_videos_element = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, your_videos_css_selector)))
+    your_videos_element.click()
+
+    new_tab = driver.window_handles[-1]
+    driver.switch_to.window(new_tab)
+
+    playlist_tab_x_path = "//span[normalize-space()='Playlists']"
+    playlist_tab_element = wait.until(EC.element_to_be_clickable((By.XPATH, playlist_tab_x_path)))
+    playlist_tab_element.click()
+
+    playlist_x_path = "//body/ytcp-app/ytcp-entity-page[@id='entity-page']/div[@id='main-container']/div[@class='nav-and-main-content style-scope ytcp-entity-page']/main[@id='main']/div[@class='all-pages style-scope ytcp-app']/ytcp-animatable[@name='channel.videos']/ytcp-content-section[@id='video-list']/ytcp-playlist-section[@id='playlist-section']/ytcp-playlist-section-content[@class='style-scope ytcp-playlist-section']/div[@id='playlist-table-content']/ytcp-playlist-row[1]/div[1]/div[1]/div[1]/a[1]/ytcp-playlist-thumbnail[1]/div[1]"
+    playlist_element = wait.until(EC.element_to_be_clickable((By.XPATH, playlist_x_path)))
+    playlist_element.click()
+
+    third_tab = driver.window_handles[-1]
+    driver.switch_to.window(third_tab)
+
+    time.sleep(5)
+    # three_dots_button_x_path = "//yt-button-shape[@version='modern']//div[2]"
+    three_dots_button_x_path = "yt-button-shape[version='modern'] div:nth-child(2)"
+    three_dots_button_element = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, three_dots_button_x_path)))
+    three_dots_button_element.click()
+
+    add_videos_x_path = "//body[1]/ytd-app[1]/ytd-popup-container[1]/tp-yt-iron-dropdown[1]/div[1]/ytd-menu-popup-renderer[1]/tp-yt-paper-listbox[1]/ytd-menu-service-item-renderer[1]/tp-yt-paper-item[1]"
+    add_videos_element = wait.until(EC.element_to_be_clickable((By.XPATH, add_videos_x_path)))
+    add_videos_element.click()
+
+    link = 'https://www.youtube.com/watch?v=l3zyyvZz0RE'
+
+
+# playlist_x_path = "//ytcp-playlist-row[1]//div[1]//div[1]//div[1]//a[1]//ytcp-playlist-thumbnail[1]//ytcp-img-with-fallback[1]//div[1]//img[1]"
 # move to second page
-three_dots_button_x_path = "button[aria-label='Action menu'] div[class='yt-spec-touch-feedback-shape yt-spec-touch-feedback-shape--touch-response']"
-add_videos_x_path = "ytd-menu-service-item-renderer[class='style-scope ytd-menu-popup-renderer iron-selected'] tp-yt-paper-item[role='option']"
-search_button_selector = "body"
+# three_dots_button_x_path = "button[aria-label='Action menu'] div[class='yt-spec-touch-feedback-shape yt-spec-touch-feedback-shape--touch-response']"
+# add_videos_x_path = "ytd-menu-service-item-renderer[class='style-scope ytd-menu-popup-renderer iron-selected'] tp-yt-paper-item[role='option']"
+# search_button_selector = "body"
