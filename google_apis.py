@@ -6,17 +6,17 @@ from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.errors import HttpError
+from googleapiclient.http import MediaFileUpload
+
 
 CLIENT_SECRETS_FILE = 'client_secret.json'
 
 
 def create_youtube_playlist(secret_key):
-    t0 = time.time()
-
     creds = authenticate()
     youtube = build('youtube', 'v3', credentials=creds, developerKey=secret_key)
 
-    prefix = 'Original Cartoon Playlist Part-IV'
+    prefix = 'Original Cartoon Playlist Part-I'
 
     title = f'{prefix}'
 
@@ -40,7 +40,6 @@ def create_youtube_playlist(secret_key):
     with open("links.txt", "r") as file:
         links = file.readlines()
 
-    # resources = []
     for index, link in enumerate(links):
         video_id = link.split('=')[-1].strip()
 
@@ -59,7 +58,7 @@ def create_youtube_playlist(secret_key):
                     }
                 }
             )
-            response = request.execute()
+            request.execute()
             print(f'{video_id} video added to playlist {playlist_id}.')
         except HttpError as error:
             print(f'An error occurred: {error}')
@@ -70,7 +69,8 @@ def authenticate():
     if os.path.exists('token.json'):
         creds = Credentials.from_authorized_user_file('token.json', [
             'https://www.googleapis.com/auth/youtube',
-            'https://www.googleapis.com/auth/youtube.force-ssl'
+            'https://www.googleapis.com/auth/youtube.force-ssl',
+            'https://www.googleapis.com/auth/youtube.upload'
         ])
 
     if not creds or not creds.valid:
@@ -79,7 +79,8 @@ def authenticate():
         else:
             flow = InstalledAppFlow.from_client_secrets_file('client_secret.json', [
                 'https://www.googleapis.com/auth/youtube',
-                'https://www.googleapis.com/auth/youtube.force-ssl'
+                'https://www.googleapis.com/auth/youtube.force-ssl',
+                'https://www.googleapis.com/auth/youtube.upload'
             ])
             creds = flow.run_local_server(port=0)
         with open('token.json', 'w') as token:
@@ -117,3 +118,40 @@ def create_multiple_youtube_playlists():
 
     t1 = time.time()
     print('It took', int(t1 - t0), 'seconds to create 1000 playlists')
+
+
+def add_youtube_video(secret_key):
+    creds = authenticate()
+    youtube = build('youtube', 'v3', credentials=creds, developerKey=secret_key)
+
+    title = 'Tech Video'
+    description = 'This is a tech test video'
+    tags = ['test', 'video', 'tech']
+    privacy = 'public'
+
+    # Define the video file path
+    video_file_path = 'youtube_video.MOV'
+    print('Uploading Video...')
+
+    # Upload the video
+    try:
+        request = youtube.videos().insert(
+            part='snippet,status',
+            body={
+                'snippet': {
+                    'title': title,
+                    'description': description,
+                    'tags': tags
+                },
+                'status': {
+                    'privacyStatus': privacy
+                }
+            },
+            media_body=MediaFileUpload(video_file_path)
+        )
+        response = request.execute()
+
+        print(f'Successfully uploaded video {response["id"]}')
+
+    except HttpError as error:
+        print(f'An error occurred: {error}')
